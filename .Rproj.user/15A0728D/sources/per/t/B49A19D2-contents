@@ -1,0 +1,98 @@
+rm(list = ls())
+#----------------------------------Functions------------------------------------
+create_contingency_table <- function(group1, group2, labels) {
+  # Ensure labels length is 4 and contains row and column names
+  if(length(labels) != 4) {
+    stop("Labels must contain exactly four elements: two row names and two column names.")
+  }
+  
+  contingency_table <- matrix(c(group1, group2), nrow = 2, byrow = TRUE)
+  rownames(contingency_table) <- labels[1:2]
+  colnames(contingency_table) <- labels[3:4]
+  return(contingency_table)
+}
+
+calculate_probabilities <- function(table) {
+  total_respondents <- sum(table)
+  
+  # Calculate probabilities for each row category (e.g., Male, Female)
+  row_probs <- apply(table, 1, sum) / total_respondents
+  
+  # Calculate probabilities for each column category (e.g., Enjoys, Does Not Enjoy)
+  col_probs <- apply(table, 2, sum) / total_respondents
+  
+  # Combine the results into a named list for clarity
+  probabilities <- list(
+    row_category_probs = row_probs,
+    col_category_probs = col_probs
+  )
+  return(probabilities)
+}
+
+conditional_probability <- function(table, condition1, condition2) {
+  # Determine if condition1 is a row or column in the table
+  if (condition1 %in% rownames(table) & condition2 %in% colnames(table)) {
+    # condition1 is a row, condition2 is a column
+    prob_condition2_given_condition1 <- table[condition1, condition2] / sum(table[condition1, ])
+    return(prob_condition2_given_condition1)
+  } else if (condition1 %in% colnames(table) & condition2 %in% rownames(table)) {
+    # condition1 is a column, condition2 is a row
+    prob_condition2_given_condition1 <- table[condition2, condition1] / sum(table[, condition1])
+    return(prob_condition2_given_condition1)
+  } else {
+    stop("Invalid conditions. Please ensure they match the row and column names of the table.")
+  }
+}
+
+bayes_rule <- function(table, evidence, hypothesis) {
+  # Check if the evidence and hypothesis are valid
+  if ((evidence %in% rownames(table) || evidence %in% colnames(table)) &&
+      (hypothesis %in% rownames(table) || hypothesis %in% colnames(table))) {
+    
+    # Calculate P(Hypothesis)
+    if (hypothesis %in% rownames(table)) {
+      prob_hypothesis <- sum(table[hypothesis, ]) / sum(table)
+    } else {
+      prob_hypothesis <- sum(table[, hypothesis]) / sum(table)
+    }
+    
+    # Calculate P(Evidence|Hypothesis)
+    prob_evidence_given_hypothesis <- conditional_probability(table, hypothesis, evidence)
+    
+    # Calculate P(Evidence)
+    if (evidence %in% rownames(table)) {
+      prob_evidence <- sum(table[evidence, ]) / sum(table)
+    } else {
+      prob_evidence <- sum(table[, evidence]) / sum(table)
+    }
+    
+    # Apply Bayes' rule: P(Hypothesis|Evidence) = (P(Evidence|Hypothesis) * P(Hypothesis)) / P(Evidence)
+    prob_hypothesis_given_evidence <- (prob_evidence_given_hypothesis * prob_hypothesis) / prob_evidence
+    return(prob_hypothesis_given_evidence)
+    
+  } else {
+    stop("Invalid evidence or hypothesis. Please ensure they match the row and column names of the table.")
+  }
+}
+
+
+
+
+#----------------------------------Pr1------------------------------------------
+# Data
+males <- c(136, 104)  # 136 yes, 104 no
+females <- c(224, 36)  # 224 yes, 36 no
+labels <- c("Male", "Female", "Yes", "No")
+total <- sum(males) + sum(females)
+
+contingency_table <- create_contingency_table(males, females, labels)
+contingency_table
+
+
+
+# Probability calculations
+prob_male <- calculate_probabilities(contingency_table)$row_category_probs["Male"]
+prob_enjoy_shopping <- calculate_probabilities(contingency_table)$col_category_probs["Yes"]
+
+
+
