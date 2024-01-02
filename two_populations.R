@@ -243,3 +243,9 @@ confidence_level <- 0.999999
 # two_proportion_z_test(successes1, sample_size1, successes2, sample_size2, confidence_level, test_type = "one-tailed-left")
 # Alternatively we can use R:
 # prop.test(c(104, 189), c(11037, 11034), conf.level = 1 - 1e-6, alternative = "less", correct = F)
+
+
+#----------------------------------Pr4------------------------------------------
+# Do the prices for meals differ between city and suburbs?
+library(readxl)
+df <- read_excel("data/Restaurants.xlsx")
