@@ -13,8 +13,6 @@ create_contingency_table <- function(data, row_labels, col_labels) {
   return(table)
 }
 
-
-
 calculate_probabilities <- function(table) {
   total_respondents <- sum(table)
 
@@ -24,21 +22,62 @@ calculate_probabilities <- function(table) {
   return(probability_matrix)
 }
 
-conditional_probability <- function(table, given, target) {
-  # Determine the position of the given and target conditions
-  given_in_row <- given %in% rownames(table)
-  target_in_col <- target %in% colnames(table)
 
-  # Calculate the conditional probability based on the position
-  if (given_in_row && target_in_col) {
-    return(table[given, target] / sum(table[given, ]))
-  } else if (!given_in_row && !target_in_col) {
-    stop("Both given and target do not match any row or column names.")
+
+
+get_probability <- function(prob_matrix, condition1, condition2 = NULL) {
+  if (!is.null(condition2)) {
+    # If two conditions are provided, proceed as before
+    if (condition1 %in% rownames(prob_matrix) && condition2 %in% colnames(prob_matrix)) {
+      return(prob_matrix[condition1, condition2])
+    } else if (condition1 %in% colnames(prob_matrix) && condition2 %in% rownames(prob_matrix)) {
+      return(prob_matrix[condition2, condition1])
+    } else {
+      stop("Invalid conditions. They must match the row or column names of the probability matrix.")
+    }
   } else {
-    # If one condition is a row and the other is a column, but they are swapped
-    stop("Mismatch between the positions of given and target conditions. Please check your inputs.")
+    # If only one condition is provided
+    if (condition1 %in% rownames(prob_matrix)) {
+      # Sum probabilities across all columns for the given row
+      return(sum(prob_matrix[condition1, ]))
+    } else if (condition1 %in% colnames(prob_matrix)) {
+      # Sum probabilities across all rows for the given column
+      return(sum(prob_matrix[, condition1]))
+    } else {
+      stop("Invalid condition. It must match a row or column name of the probability matrix.")
+    }
   }
 }
+
+
+
+conditional_probability <- function(table, given, target) {
+  # Check if given and target are valid
+  if (!(given %in% rownames(table) || given %in% colnames(table)) ||
+    !(target %in% rownames(table) || target %in% colnames(table))) {
+    stop("Invalid given or target. They must match the row or column names of the table.")
+  }
+
+  # Determine the positions of given and target
+  if (given %in% rownames(table)) {
+    # Given is a row
+    if (target %in% colnames(table)) {
+      # Target is a column
+      return(table[given, target] / sum(table[given, ]))
+    } else {
+      stop("Mismatch: 'given' is a row name but 'target' is not a column name.")
+    }
+  } else {
+    # Given is a column
+    if (target %in% rownames(table)) {
+      # Target is a row
+      return(table[target, given] / sum(table[, given]))
+    } else {
+      stop("Mismatch: 'given' is a column name but 'target' is not a row name.")
+    }
+  }
+}
+
 
 bayes_rule <- function(table, evidence, hypothesis) {
   # Validate inputs
@@ -47,14 +86,16 @@ bayes_rule <- function(table, evidence, hypothesis) {
     stop("Invalid evidence or hypothesis. Please ensure they match the row and column names of the table.")
   }
 
-  # Calculate probabilities
+  # Calculate P(Hypothesis)
   prob_hypothesis <- ifelse(hypothesis %in% rownames(table),
     sum(table[hypothesis, ]) / sum(table),
     sum(table[, hypothesis]) / sum(table)
   )
-  print(table)
+
+  # Calculate P(Evidence|Hypothesis)
   prob_evidence_given_hypothesis <- conditional_probability(table, hypothesis, evidence)
 
+  # Calculate P(Evidence)
   prob_evidence <- ifelse(evidence %in% rownames(table),
     sum(table[evidence, ]) / sum(table),
     sum(table[, evidence]) / sum(table)
@@ -69,28 +110,29 @@ bayes_rule <- function(table, evidence, hypothesis) {
 
 
 
+
 #----------------------------------Pr1------------------------------------------
 # Data
 males <- c(136, 104) # 136 yes, 104 no
 females <- c(224, 36) # 224 yes, 36 no
 data <- list(males, females)
-row_labels <- c("Yes", "No")
-col_labels <- c("Male", "Female")
+col_labels <- c("Yes", "No")
+row_labels <- c("Male", "Female")
 total <- sum(males) + sum(females)
 
 
 contingency_table <- create_contingency_table(data, row_labels = row_labels, col_labels = col_labels)
-
 all_probabilities <- calculate_probabilities(contingency_table)
 
+
 # Probability calculations
-prob_male <- sum(all_probabilities[, "Male"])
-prob_enjoy <- sum(all_probabilities["Yes", ])
-prob_female_enjoy <- all_probabilities["Yes", "Female"]
-prob_male_not_enjoyt <- all_probabilities["No", "Male"]
-prob_female_or_enjoy <- sum(all_probabilities[, "Female"]) + sum(all_probabilities["Yes", ]) - all_probabilities["Yes", "Female"]
-prob_male_or_not_enjoy <- sum(all_probabilities[, "Male"]) + sum(all_probabilities["No", ]) - all_probabilities["No", "Male"]
-prob_female_knowing_enjoy <- bayes_rule(contingency_table, "Female", "Yes")
+prob_male <- get_probability(all_probabilities, "Male")
+prob_enjoy <- get_probability(all_probabilities, "Yes")
+prob_female_enjoy <- get_probability(all_probabilities, "Female", "Yes")
+prob_male_not_enjoy <- get_probability(all_probabilities, "Male", "No")
+prob_female_or_enjoy <- get_probability(all_probabilities, "Female") + get_probability(all_probabilities, "Yes") - get_probability(all_probabilities, "Female", "Yes")
+prob_male_or_not_enjoy <- get_probability(all_probabilities, "Male") + get_probability(all_probabilities, "No") - get_probability(all_probabilities, "Male", "No")
+prob_female_knowing_enjoy <- bayes_rule(contingency_table, evidence = "Yes", "Female")
 
 #----------------------------------Pr2------------------------------------------
 
@@ -103,13 +145,12 @@ prob_female_knowing_enjoy <- bayes_rule(contingency_table, "Female", "Yes")
 manufacturer_A <- c(3000, 3000 * 0.04) # 3000 yes, 120 no
 manufacturer_B <- c(2400, 2400 * 0.07) # 2400 yes, 168 no
 data <- list(manufacturer_A, manufacturer_B)
-row_labels <- c("Regular", "Irregular")
-col_labels <- c("Manufacturer A", "Manufacturer B")
+col_labels <- c("Regular", "Irregular")
+row_labels <- c("Manufacturer A", "Manufacturer B")
 
 
 contingency_table <- create_contingency_table(data, row_labels = row_labels, col_labels = col_labels)
-
-prob_manufacturer_B_given_irregular <- bayes_rule(contingency_table, "Irregular", "Manufacturer B")
+prob_manufacturer_B_given_irregular <- bayes_rule(contingency_table, evidence = "Irregular", "Manufacturer B")
 
 #----------------------------------Pr3------------------------------------------
 
@@ -121,11 +162,10 @@ prob_manufacturer_B_given_irregular <- bayes_rule(contingency_table, "Irregular"
 # Data
 company_A <- c(38, 2) # 40 yes, 2 no
 company_B <- c(29.1, 0.9) # 30 yes, 0.9 no
-company_C <- c(29.25, 3.65) # 30 yes, 0.75 no
+company_C <- c(29.25, 0.75) # 30 yes, 0.75 no
 data <- list(company_A, company_B, company_C)
-row_labels <- c("Not Late", "Late")
-col_labels <- c("Company A", "Company B", "Company C")
+col_labels <- c("Not Late", "Late")
+row_labels <- c("Company A", "Company B", "Company C")
 
 contingency_table <- create_contingency_table(data, row_labels = row_labels, col_labels = col_labels)
-
-# prob_company_A_given_late <- bayes_rule(contingency_table, "Late", "Company A")
+prob_company_A_given_late <- bayes_rule(contingency_table, evidence = "Late", "Company A")
