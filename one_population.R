@@ -1,5 +1,5 @@
 #----------------------------------Functions----------------------------------
-proportion_test <- function(successes, sample_size, claimed_proportion, confidence_level, test_type = "two-tailed") {
+one_population_z_test <- function(successes, sample_size, claimed_proportion, confidence_level, test_type = "two-tailed") {
     sample_proportion <- successes / sample_size
     standard_error <- sqrt(claimed_proportion * (1 - claimed_proportion) / sample_size)
     z_value <- (sample_proportion - claimed_proportion) / standard_error
@@ -62,7 +62,7 @@ confidence_level <- 0.95
 # H1: p <> 0.6
 
 # Test
-# proportion_test(successes = successes, sample_size = sample_size, claimed_proportion = claimed_proportion, confidence_level = confidence_level)
+# one_population_z_test(successes = successes, sample_size = sample_size, claimed_proportion = claimed_proportion, confidence_level = confidence_level)
 
 #----------------------------------Pr2------------------------------------------
 # Your statistics professor claims that 60 percent of the students who take his class go
@@ -83,4 +83,4 @@ confidence_level <- 0.95
 # H1: p < 0.6
 
 # Test
-# proportion_test(successes = successes, sample_size = sample_size, claimed_proportion = claimed_proportion, confidence_level = confidence_level, test_type = "one-tailed-left")
+# one_population_z_test(successes = successes, sample_size = sample_size, claimed_proportion = claimed_proportion, confidence_level = confidence_level, test_type = "one-tailed-left")
