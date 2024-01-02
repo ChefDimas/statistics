@@ -2,6 +2,7 @@
 # is < 30
 #----------------------------------Functions----------------------------------
 t_test <- function(sample_data, population_mean, confidence_level, test_type = "one-tailed-lower", min_sample_size = 30) {
+    cat("--------------------", "\n")
     sample_size <- length(sample_data)
     sample_mean <- mean(sample_data)
     sample_sd <- sd(sample_data)
@@ -17,6 +18,10 @@ t_test <- function(sample_data, population_mean, confidence_level, test_type = "
 
     # Determine the alpha (significance level)
     alpha <- 1 - confidence_level
+
+    # Initialize critical values
+    t_critical_lower <- NA
+    t_critical_upper <- NA
 
     # Determine the critical t-value and p-value based on the test type
     if (test_type == "two-tailed") {
@@ -80,7 +85,7 @@ t_test <- function(sample_data, population_mean, confidence_level, test_type = "
     } else {
         cat("Not enough observations for t.test(). At least", min_sample_size, "required, but only", sample_size, "provided.\n")
     }
-
+    cat("--------------------", "\n")
     return(list(
         manual_t_value = t_value_manual, manual_critical_t_value = c(t_critical_lower, t_critical_upper),
         manual_p_value = p_value_manual, manual_decision = manual_decision, comparison = comparison,
@@ -137,4 +142,48 @@ alpha <- 0.05
 # If T < T_lower or T > T_upper => reject H0
 
 # Test
-t_test(sample_data = sample_data, population_mean = population_mean, confidence_level = 0.95, test_type = "two-tailed")
+# t_test(sample_data = sample_data, population_mean = population_mean, confidence_level = 0.95, test_type = "two-tailed")
+
+
+#----------------------------------Pr3------------------------------------------
+# This famous (Fisher's or Anderson's) iris data set gives the measurements in centimeters
+# of the variables sepal length and width and petal length and width, respectively, for 50
+# flowers from each of 3 species of iris. The species are Iris setosa, versicolor,
+# and virginica. iris is a built-in dataset in R, which can be loaded into memory using
+# the command data(iris). The object iris is a data frame with 150 cases (rows) and 5
+# variables (columns) named Sepal.Length, Sepal.Width, Petal.Length, Petal.Width, and Species.
+
+# a) Test the hypothesis that the population mean sepal length is less than 6 cm
+
+# Data
+data <- data(iris)
+sample_data <- iris$Sepal.Length
+sample_size <- length(sample_data)
+claimed_mean <- 6
+confidence_level <- 0.95
+
+# Hypothesis
+# RQ: Is the mean less than 6?
+# H0: mean = 6
+# H1: mean < 6
+
+# Test
+t_test(sample_data = sample_data, population_mean = claimed_mean, confidence_level = confidence_level, test_type = "one-tailed-lower")
+
+
+# Test the hypothesis that the population mean sepal width is significantly different than 3 cm
+
+# Data
+data <- data(iris)
+sample_data <- iris$Sepal.Width
+sample_size <- length(sample_data)
+claimed_mean <- 3
+confidence_level <- 0.95
+
+# Hypothesis
+# RQ: Is the mean different from 3?
+# H0: mean = 3
+# H1: mean <> 3
+
+# Test
+t_test(sample_data = sample_data, population_mean = claimed_mean, confidence_level = confidence_level, test_type = "two-tailed")
