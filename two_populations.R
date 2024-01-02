@@ -249,3 +249,117 @@ confidence_level <- 0.999999
 # Do the prices for meals differ between city and suburbs?
 library(readxl)
 df <- read_excel("data/Restaurants.xlsx")
+
+# Data
+location <- df$Location
+price <- df$Cost
+
+# Hypothesis
+# RQ: Do the prices for meals differ between city and suburbs?
+# H0: mu1 - mu2 = 0
+# H1: mu1 - mu2 <> 0
+
+# Test
+# pooled_variance_t_test(sample_data1 = price[location == "City"], sample_data2 = price[location == "Suburban"], confidence_level = 0.95, test_type = "two-tailed")
+# Alternatively we can use R:
+# t.test (X1, X2, paired=F, var.equal=T)
+
+
+#----------------------------------Pr5------------------------------------------
+# Is there a difference at a significance level of 1% between the rating of TV service
+# & Internet service for various providers?
+
+# Data
+library(readxl)
+df <- read_excel("data/Telecom.xlsx")
+
+
+# Hypothesis
+# RQ: Is there a difference at a significance level of 1% between the rating of TV service & Internet service for various providers?
+# H0: mu1 - mu2 = 0
+# H1: mu1 - mu2 <> 0
+
+# Test
+# paired_t_test(sample_data1 = df$TV, sample_data2 = df$Internet, confidence_level = 0.99, test_type = "two-tailed")
+
+
+#----------------------------------Pr6------------------------------------------
+# The Concrete file contains data that represent the compressive strength, in thousands of
+# pounds per square inch (psi), of 40 samples of concrete taken two and seven days after
+# pouring.
+# At the 0.01 level of significance, is there evidence that the mean strength is lower at
+# two days than at seven days? Data file: Concrete.xls
+
+# Data
+library(readxl)
+df <- read_excel("data/Concrete.xlsx")
+
+# Hypothesis
+# RQ: At the 0.01 level of significance, is there evidence that the mean strength is lower at two days than at seven days?
+# H0: mu1 - mu2 = 0
+# H1: mu1 < mu2
+
+# Test
+# paired_t_test(sample_data1 = df$"Two days", sample_data2 = df$"Seven days", confidence_level = 0.99, test_type = "one-tailed-left")
+# print(t.test(df$"Two days", df$"Seven days", paired = TRUE, conf.level = 0.99, alternative = "less"))
+
+#----------------------------------Pr7------------------------------------------
+# A problem with a telephone line that prevents a customer from receiving or making calls is upsetting to both the customer and the telephone company. The following data represent samples of 20 problems reported to two different offices of a telephone company and the time to clear these problems (in minutes) from the customers’ lines:
+# Central Office I Time to Clear Problems (minutes)
+# 1.48 1.75 0.78 2.85 0.52 1.60 4.15 3.97 1.48 3.10 1.02 0.53 0.93 1.60 0.80 1.05 6.32 3.93 5.45 0.97
+# Central Office II Time to Clear Problems (minutes)
+# 7.55 3.75 0.10 1.10 0.60 0.52 3.30 2.10 0.58 4.02 3.75 0.65 1.92 0.60 1.53 4.23 0.08 1.48 1.65 0.72
+# Is there evidence of a difference in the mean waiting time between the two offices? (Use α = 0.05)
+
+# Data
+central_office1 <- c(1.48, 1.75, 0.78, 2.85, 0.52, 1.60, 4.15, 3.97, 1.48, 3.10, 1.02, 0.53, 0.93, 1.60, 0.80, 1.05, 6.32, 3.93, 5.45, 0.97)
+central_office2 <- c(7.55, 3.75, 0.10, 1.10, 0.60, 0.52, 3.30, 2.10, 0.58, 4.02, 3.75, 0.65, 1.92, 0.60, 1.53, 4.23, 0.08, 1.48, 1.65, 0.72)
+
+# Hypothesis
+# RQ: Is there evidence of a difference in the mean waiting time between the two offices?
+# H0: mu1 - mu2 = 0
+# H1: mu1 <> mu2
+
+# Test
+# pooled_variance_t_test(sample_data1 = central_office1, sample_data2 = central_office2, confidence_level = 0.95, test_type = "two-tailed")
+
+
+#----------------------------------Pr8------------------------------------------
+# Technology has led to the rise of extreme workers who are on the job 60 hours or more per week. One of the reasons cited by employees as to why they worked long hours was that they loved their job because it is stimulating/challenging/provides an adrenaline rush.
+# Suppose that the survey of 1,564 workaholics included 786 men and 778 women, and the
+# results showed that 707 men and 638 women loved their job because it is stimulating.
+# At the 0.05 level of significance, is the proportion of workaholic men who love their
+# job because it is stimulating different from the proportion of women?
+
+# Data
+successes1 <- 707
+sample_size1 <- 786
+successes2 <- 638
+sample_size2 <- 778
+confidence_level <- 0.95
+
+# Hypothesis
+# H0: p1 - p2 = 0
+# H1: p1 - p2 <> 0
+
+# Test
+# two_proportion_z_test(successes1, sample_size1, successes2, sample_size2, confidence_level, test_type = "two-tailed")
+
+
+#----------------------------------Pr9------------------------------------------
+# You would like to determine at a level of significance of α = 0.05, whether the mean
+# surface hardness of steel intaglio printing plates prepared using a new treatment
+# differs from the mean hardness of plates that are untreated. The following results
+# are from an experiment in which 40 steel plates, 20 treated and 20 untreated,
+# were tested for surface hardness. Data file: Intaglio.xls
+
+# Data
+library(readxl)
+df <- read_excel("data/Intaglio.xlsx")
+
+# Hypothesis
+# H0: mu1 - mu2 = 0
+# H1: mu1 <> mu2
+
+# Test
+pooled_variance_t_test(sample_data1 = df$Treated, sample_data2 = df$Untreated, confidence_level = 0.95, test_type = "two-tailed")
