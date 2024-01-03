@@ -45,7 +45,7 @@ perform_chi_square_test <- function(observed, expected = NULL, significance_leve
     }
 
     # Perform the built-in Chi-square test for confirmation
-    chi_test_result <- chisq.test(observed, p = expected / sum(expected), correct)
+    chi_test_result <- chisq.test(observed, correct)
 
     # Print the built-in test results
     cat("\nBuilt-in Chi-squared Test Result:\n")

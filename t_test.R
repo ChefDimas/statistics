@@ -186,4 +186,4 @@ confidence_level <- 0.95
 # H1: mean <> 3
 
 # Test
-t_test(sample_data = sample_data, population_mean = claimed_mean, confidence_level = confidence_level, test_type = "two-tailed")
+# t_test(sample_data = sample_data, population_mean = claimed_mean, confidence_level = confidence_level, test_type = "two-tailed")
