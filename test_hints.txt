@@ -1,0 +1,25 @@
+
+anova.R:
+- perform_anova: Use when you have 2 or more groups and want to compare their means. Check if you have 'score' and 'group' columns in your data.
+
+chi_test.R:
+- perform_chi_square_test: Use when you have observed frequencies and want to compare them with expected frequencies. Useful for categorical data.
+
+one_population.R:
+- one_population_z_test: Use when testing a single proportion against a claimed proportion. Check if you have a success count, sample size, and claimed proportion.
+
+t_test.R:
+- t_test: Use when you have a sample and want to compare its mean against a population mean. Ensure you know the confidence level and whether the test is one or two-tailed.
+two_populations.R
+- two_proportion_z_test: Use when comparing proportions from two different populations. Requires success and sample sizes for both populations.
+- pooled_variance_t_test: Use when comparing means from two populations assuming equal variances. Requires sample data for both populations.
+- paired_t_test: Use when comparing means from two related populations. Useful for before-and-after scenarios.
+
+z_test.R:
+- z_test: Use when you have a sample mean, size, and population mean and standard deviation. Decide if it's a one or two-tailed test.
+
+General Hints:
+- When testing means, think t_test or z_test.
+- When testing proportions, think one_population_z_test or two_proportion_z_test.
+- 'two-tailed' typically checks for any difference, while 'one-tailed' checks for a specific direction of difference.
+- Check the required assumptions for each test, like normal distribution or sample size.
