@@ -1,4 +1,8 @@
 #----------------------------------Functions----------------------------------
+# Use this function when:
+
+# You are comparing the proportions or success rates between two independent groups.
+# You have large sample sizes (typically more than 30) for both groups, which justify the use of a Z-test.
 two_proportion_z_test <- function(successes1, sample_size1, successes2, sample_size2, confidence_level, test_type = "two-tailed") {
     cat("--------------------\n")
     # Calculate sample proportions and their difference
@@ -50,7 +54,11 @@ two_proportion_z_test <- function(successes1, sample_size1, successes2, sample_s
 
 
 
+# Use this function when:
 
+# You are comparing the means of two independent groups.
+# You believe or want to assume the two populations have the same variance (homoscedasticity).
+# Your sample sizes are smaller or you don't know the population standard deviations, making the t-test more appropriate than a Z-test.
 pooled_variance_t_test <- function(sample_data1, sample_data2, confidence_level, test_type = "two-tailed") {
     cat("--------------------\n")
     # Calculate sample means and standard deviations
@@ -106,7 +114,11 @@ pooled_variance_t_test <- function(sample_data1, sample_data2, confidence_level,
 
 
 
+# Use this function when:
 
+# You are comparing the means of two related groups.
+# This could mean the same individuals measured at two different times or two groups with matched subjects.
+# The data are paired, meaning each data point in one group is related to one and only one data point in the second group.
 paired_t_test <- function(sample_data1, sample_data2, confidence_level, test_type = "two-tailed") {
     cat("--------------------\n")
     # Calculate differences
