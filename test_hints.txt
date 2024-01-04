@@ -23,3 +23,8 @@ General Hints:
 - When testing proportions, think one_population_z_test or two_proportion_z_test.
 - 'two-tailed' typically checks for any difference, while 'one-tailed' checks for a specific direction of difference.
 - Check the required assumptions for each test, like normal distribution or sample size.
+
+
+
+1 sample for mean - z-test / t-test if n<30
+2 sample for mean 

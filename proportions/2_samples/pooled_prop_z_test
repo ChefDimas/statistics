@@ -1,0 +1,50 @@
+# You are comparing the proportions or success rates between two independent groups.
+# You have large sample sizes (typically more than 30) for both groups, which justify the use of a Z-test.
+two_proportion_z_test <- function(successes1, sample_size1, successes2, sample_size2, confidence_level, test_type = "two-tailed") {
+    cat("--------------------\n")
+    # Calculate sample proportions and their difference
+    p1 <- successes1 / sample_size1
+    p2 <- successes2 / sample_size2
+    p_diff <- p1 - p2
+
+    # Calculate the pooled proportion and standard error
+    pooled_p <- (successes1 + successes2) / (sample_size1 + sample_size2)
+    standard_error <- sqrt(pooled_p * (1 - pooled_p) * (1 / sample_size1 + 1 / sample_size2))
+
+    # Calculate the z-value
+    z_value <- p_diff / standard_error
+
+    # Determine the critical z-value and p-value
+    alpha <- 1 - confidence_level
+    z_critical_lower <- NA
+    z_critical_upper <- NA
+    if (test_type == "two-tailed") {
+        z_critical_lower <- qnorm(alpha / 2)
+        z_critical_upper <- qnorm(1 - alpha / 2)
+        p_value <- 2 * (1 - pnorm(abs(z_value)))
+    } else if (test_type == "one-tailed-left") {
+        z_critical_lower <- qnorm(alpha)
+        p_value <- pnorm(z_value)
+    } else if (test_type == "one-tailed-right") {
+        z_critical_upper <- qnorm(1 - alpha)
+        p_value <- 1 - pnorm(z_value)
+    } else {
+        stop("Invalid test type. Please specify 'two-tailed', 'one-tailed-left', or 'one-tailed-right'.")
+    }
+
+    # Print the results
+    cat("Z-value:", z_value, "\n")
+    cat("Critical Z-value Lower (if applicable):", z_critical_lower, "\n")
+    cat("Critical Z-value Upper (if applicable):", z_critical_upper, "\n")
+    cat("P-value:", p_value, "\n")
+
+    # Use prop.test for built-in calculation
+    prop_test_result <- prop.test(c(successes1, successes2), c(sample_size1, sample_size2), conf.level = confidence_level, correct = FALSE)
+
+    # Decision making
+    decision <- ifelse(p_value < alpha, "Reject the null hypothesis", "Do NOT reject the null hypothesis")
+
+    cat("Decision:", decision, "\n")
+    cat("--------------------\n")
+    return(list(z_value = z_value, z_critical_lower = z_critical_lower, z_critical_upper = z_critical_upper, p_value = p_value, prop_test_result = prop_test_result, decision = decision))
+}
