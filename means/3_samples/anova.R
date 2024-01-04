@@ -83,4 +83,14 @@ data <- data.frame(
 # H1: m1 <> m2 <> m3
 
 # Perform ANOVA
+# perform_anova(data)
+
+
+#----------------------------------Pr2------------------------------------------
+# Data
+library(readxl)
+library(reshape2)
+data <- read_excel("./data/GolfBall.xlsx")
+data <- stack(data)
+names(data) <- c("score", "group")
 perform_anova(data)
