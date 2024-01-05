@@ -126,4 +126,62 @@ dimnames(observed) <- list(c("IceCream", "Cake", "Fruit", "None"), c("Beef", "Po
 # H1: p1 <> p2 <> p3 <> p4
 
 # Chi-square test
-perform_chi_square_test(observed, significance_level = significance_level, correct = TRUE)
+# perform_chi_square_test(observed, significance_level = significance_level, correct = TRUE)
+
+
+#----------------------------------Pr4------------------------------------------
+insurance <- c(40, 160)
+phramacy <- c(80, 120)
+research <- c(90, 110)
+
+data <- as.table(rbind(insurance, phramacy, research))
+dimnames(data) <- list(c("Insurance", "Phramacy", "Research"), c("Yes", "No"))
+# print(data)
+
+significance_level <- 0.05
+
+# Hypothesis test
+# H0: p1 = p2 = p3
+# H1: At least one of the proportions is different
+
+
+# Chi-square test
+# perform_chi_square_test(data, significance_level = significance_level)
+
+
+#----------------------------------Pr5------------------------------------------
+low <- c(21, 28, 35, 38)
+medium <- c(34, 22, 29, 37)
+high <- c(36, 41, 28, 17)
+
+data <- as.table(rbind(low, medium, high))
+dimnames(data) <- list(c("Low", "Medium", "High"), c("IQ", "IIQ", "IIIQ", "IVQ"))
+significance_level <- 0.05
+
+# Hypothesis test
+# H0: p1 = p2 = p3
+# H1: At least one of the proportions is different
+
+# Chi-square test
+# perform_chi_square_test(data, significance_level = significance_level)
+
+
+
+#----------------------------------Pr4------------------------------------------
+# Data
+library(readxl)
+data <- read_excel("./data/LungCapData.xls")
+
+
+new_data <- table(data$Smoke, data$Gender)
+print(new_data)
+
+significance_level <- 0.05
+
+# Hypothesis
+# RQ: Is a dependency between gender and smoking status?
+# H0: m1 = m2
+# H1: m1 <> m2
+
+# Perform Chi-square test
+# perform_chi_square_test(new_data, significance_level = significance_level)

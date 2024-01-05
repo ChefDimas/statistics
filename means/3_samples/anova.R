@@ -1,5 +1,5 @@
 #----------------------------------Functions----------------------------------
-perform_anova <- function(data, alpha = 0.05) {
+perform_anova <- function(data, significance_level = 0.05) {
     cat("--------------------------------\n")
 
     # Convert data to the correct format if it's a matrix or array
@@ -42,11 +42,11 @@ perform_anova <- function(data, alpha = 0.05) {
     F_statistic <- MSB / MSW
 
     # Calculate critical F-value
-    F_critical <- qf(1 - alpha, df_between, df_within)
+    F_critical <- qf(1 - significance_level, df_between, df_within)
 
     # Print the F-statistic and critical F-value
     cat("Calculated F-statistic:", F_statistic, "\n")
-    cat("Critical F-value at", alpha * 100, "% significance level:", F_critical, "\n")
+    cat("Critical F-value at", significance_level * 100, "% significance level:", F_critical, "\n")
 
     # Decision
     if (F_statistic > F_critical) {
@@ -89,8 +89,24 @@ data <- data.frame(
 #----------------------------------Pr2------------------------------------------
 # Data
 library(readxl)
-library(reshape2)
 data <- read_excel("./data/GolfBall.xlsx")
 data <- stack(data)
 names(data) <- c("score", "group")
-perform_anova(data)
+# perform_anova(data)
+
+
+#----------------------------------Pr3------------------------------------------
+# Data
+library(readxl)
+data <- read_excel("./data/BoxFills.xlsx")
+data <- stack(data)
+names(data) <- c("score", "group")
+significance_level <- 0.05
+
+# Hypothesis
+# RQ: Is there (at the 0.05 level of significance) a relationship between the box fill and the type of plant?
+# H0: m1 = m2 = m3
+# H1: m1 <> m2 <> m3
+
+# Perform ANOVA
+# perform_anova(data, significance_level = significance_level)
