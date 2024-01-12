@@ -1,3 +1,4 @@
+rm(list = ls())
 t_test <- function(sample_data, population_mean, confidence_level, test_type = "one-tailed-lower", min_sample_size = 30) {
     cat("--------------------", "\n")
     sample_size <- length(sample_data)
@@ -184,7 +185,7 @@ paired_t_test <- function(sample_data1, sample_data2, confidence_level, test_typ
     return(list(t_value = t_value, t_critical_lower = t_critical_lower, t_critical_upper = t_critical_upper, p_value = p_value, t_test_result = t_test_result, decision = decision))
 }
 
-perform_chi_square_test <- function(observed, expected = NULL, significance_level = 0.05, correct = FALSE) {
+perform_chi_square_test <- function(observed, expected = NULL, significance_level = 0.05) {
     cat("--------------------------------\n")
 
     # If expected values are not provided, calculate them
@@ -215,7 +216,7 @@ perform_chi_square_test <- function(observed, expected = NULL, significance_leve
     # Print the manual calculation results
     cat("Degrees of Freedom:", df, "\n")
     cat("Manual Chi-squared Statistic:", chi_squared_statistic, "\n")
-    cat("Critical Chi-squared at", significance_level * 100, "% significance:", chi_squared_critical, "\n")
+    cat("Critical Chi-squared at", significance_level, "% significance:", chi_squared_critical, "\n")
 
     # Decision based on manual calculation
     if (chi_squared_statistic > chi_squared_critical) {
@@ -225,7 +226,7 @@ perform_chi_square_test <- function(observed, expected = NULL, significance_leve
     }
 
     # Perform the built-in Chi-square test for confirmation
-    chi_test_result <- chisq.test(observed, correct)
+    chi_test_result <- chisq.test(observed, correct = FALSE)
 
     # Print the built-in test results
     cat("\nBuilt-in Chi-squared Test Result:\n")
@@ -240,7 +241,65 @@ perform_chi_square_test <- function(observed, expected = NULL, significance_leve
         built_in_chi_squared_test = chi_test_result
     ))
 }
-perform_anova <- function(data, alpha = 0.05) {
+
+pooled_variance_t_test <- function(sample_data1, sample_data2, confidence_level, test_type = "two-tailed") {
+    cat("--------------------\n")
+    # Calculate sample means and standard deviations
+    mean1 <- mean(sample_data1)
+    mean2 <- mean(sample_data2)
+    sd1 <- sd(sample_data1)
+    sd2 <- sd(sample_data2)
+
+    # Calculate the pooled standard deviation and standard error
+    n1 <- length(sample_data1)
+    n2 <- length(sample_data2)
+    pooled_sd <- sqrt(((n1 - 1) * sd1^2 + (n2 - 1) * sd2^2) / (n1 + n2 - 2))
+    standard_error <- pooled_sd * sqrt(1 / n1 + 1 / n2)
+
+    # Calculate the t-value
+    t_value <- (mean1 - mean2) / standard_error
+    df <- n1 + n2 - 2
+
+    # Determine the critical t-value and p-value
+    alpha <- 1 - confidence_level
+    t_critical_lower <- NA
+    t_critical_upper <- NA
+    if (test_type == "two-tailed") {
+        t_critical_lower <- qt(alpha / 2, df)
+        t_critical_upper <- qt(1 - alpha / 2, df)
+        p_value <- 2 * pt(-abs(t_value), df)
+    } else if (test_type == "one-tailed-left") {
+        t_critical_lower <- qt(alpha, df)
+        p_value <- pt(t_value, df)
+    } else if (test_type == "one-tailed-right") {
+        t_critical_upper <- qt(1 - alpha, df)
+        p_value <- 1 - pt(t_value, df)
+    } else {
+        stop("Invalid test type. Please specify 'two-tailed', 'one-tailed-left', or 'one-tailed-right'.")
+    }
+
+    # Print the results
+    cat("T-value:", t_value, "\n")
+    cat("Critical T-value Lower (if applicable):", t_critical_lower, "\n")
+    cat("Critical T-value Upper (if applicable):", t_critical_upper, "\n")
+    cat("P-value:", p_value, "\n")
+
+    # Use t.test for built-in calculation
+    t_test_result <- t.test(sample_data1, sample_data2, var.equal = TRUE, conf.level = confidence_level, alternative = ifelse(test_type == "two-tailed", "two.sided", "less"))
+
+    cat("Built-in t.test Result:\n")
+    print(t_test_result)
+
+    # Decision making
+    decision <- ifelse(p_value < alpha, "Reject the null hypothesis", "Do NOT reject the null hypothesis")
+
+    cat("Decision:", decision, "\n")
+    cat("--------------------\n")
+    return(list(t_value = t_value, t_critical_lower = t_critical_lower, t_critical_upper = t_critical_upper, p_value = p_value, t_test_result = t_test_result, decision = decision))
+}
+
+
+perform_anova <- function(data, significance_level = 0.05) {
     cat("--------------------------------\n")
 
     # Convert data to the correct format if it's a matrix or array
@@ -283,11 +342,11 @@ perform_anova <- function(data, alpha = 0.05) {
     F_statistic <- MSB / MSW
 
     # Calculate critical F-value
-    F_critical <- qf(1 - alpha, df_between, df_within)
+    F_critical <- qf(1 - significance_level, df_between, df_within)
 
     # Print the F-statistic and critical F-value
     cat("Calculated F-statistic:", F_statistic, "\n")
-    cat("Critical F-value at", alpha * 100, "% significance level:", F_critical, "\n")
+    cat("Critical F-value at", significance_level, "% significance level:", F_critical, "\n")
 
     # Decision
     if (F_statistic > F_critical) {
@@ -303,15 +362,8 @@ perform_anova <- function(data, alpha = 0.05) {
 # -------------------------------Problem 1--------------------------------
 library(readxl)
 df <- read_excel("./data/BoxFills.xlsx")
-
-# can simplify the df creation?
-# df2 <- data.frame(score = c(df$"Plant 1", df$"Plant 2", df$"Plant 3", df$"Plant 4"), group = rep(group, each = length(df$"Plant 1")))
 df2 <- stack(df)
-# names(data) <- c("score", "group")
-# print(df2)
 colnames(df2) <- c("score", "group")
-
-
 
 significance_level <- 0.05
 # RQ: Is there a difference amoung 4 plant box weights?
@@ -345,11 +397,11 @@ significance_level <- 0.05
 
 
 # Hypothesis
-# RQ: Is there a difference in the mean weight which cat consumed in the first 10 minutes gain among the 4 cat food ingredients?
-# H0: mu1 = mu2 = mu3 = mu4
-# H1: mu1 <> mu2 <> mu3 <> mu4
+# RQ: Is there a difference in the mean weight which cat consumed in the first 10 minutes gain among the 5 cat food ingredients?
+# H0: mu1 = mu2 = mu3 = mu4 = mu5
+# H1: mu1 <> mu2 <> mu3 <> mu4 <> mu5
 
-# perform_anova(df2, significance_level)
+# perform_anova(df2, significance_level = significance_level)
 
 
 # -------------------------------Problem 4--------------------------------
@@ -382,13 +434,13 @@ contingency_table <- table(gender, caesarean)
 contingency_table <- table(caesarean, gender)
 # perform_chi_square_test(contingency_table, significance_level = 0.05)
 
+contingency_table <- table(smoking, caesarean)
+# perform_chi_square_test(contingency_table, significance_level = 0.05)
+
 lung_cap <- df$LungCap
 age <- df$Age
 height <- df$Height
 
-# paired_t_test(lung_cap, age, confidence_level = 0.95, test_type = "two-tailed")
-# paired_t_test(lung_cap, height, confidence_level = 0.95, test_type = "two-tailed")
-# paired_t_test(age, height, confidence_level = 0.95, test_type = "two-tailed")
 
 # C
 # Is there a difference in the mean lung capacity between smokers and non-smokers?
@@ -397,24 +449,18 @@ height <- df$Height
 
 smokers <- df$LungCap[df$Smoke == "yes"]
 non_smokers <- df$LungCap[df$Smoke == "no"]
-mean_non_smokers <- mean(non_smokers)
-# t_test(smokers, mean_non_smokers, confidence_level = 0.95, test_type = "two-tailed")
-
+# pooled_variance_t_test(smokers, non_smokers, confidence_level = 0.95, test_type = "two-tailed")
 # D
 # Check the difference of LungCapbetween all other groups/factors
 
 # Age
 smokers <- df$Age[df$Smoke == "yes"]
 non_smokers <- df$Age[df$Smoke == "no"]
-mean_non_smokers <- mean(non_smokers)
-# t_test(smokers, mean_non_smokers, confidence_level = 0.95, test_type = "two-tailed")
+# pooled_variance_t_test(smokers, age, confidence_level = 0.95, test_type = "two-tailed")
 
 # Height
 smokers <- df$Height[df$Smoke == "yes"]
 non_smokers <- df$Height[df$Smoke == "no"]
-mean_non_smokers <- mean(non_smokers)
-# t_test(smokers, mean_non_smokers, confidence_level = 0.95, test_type = "two-tailed")
-
 
 # E
 # Is there a linear relation between (LungCap) and (Age)? What is the formula? How good is the model?
@@ -439,9 +485,9 @@ df <- read_excel("./data/GlenCove.xlsx")
 # A
 # Use the least-squares method to compute the regression coefficients b0 and b1.
 # State the simple linear regression equation for predicting the appraised value based on the land area.
-market_value <- df$"Fair Market Value($000)"
-land_area <- df$"Property Size (acres)"
-model <- lm(market_value ~ land_area, data = df)
+y <- df$"Fair Market Value($000)"
+x <- df$"Property Size (acres)"
+model <- lm(y ~ x, data = df)
 summary <- summary(model)
 print(summary)
 b1 <- summary$coefficients[2, 1]
@@ -473,7 +519,7 @@ predict_value_equation <- b0 + b1 * 0.25
 # E
 # Compute the coefficient of determination, r^2, and interpret its meaning.
 r_squared <- summary(model)$r.squared
-print(r_squared)
+# print(r_squared)
 # A higher r^2 value indicates a better fit between the model and the data.
 # For instance, an r^2 of 0.7 suggests that 70% of the variability in the appraised
 # value can be explained by the land area. However, a high r^2 doesn't necessarily
@@ -493,13 +539,15 @@ residuals <- residuals(model)
 # H0: b1 = 0
 # H1: b1 <> 0
 # if p value is less than significance level, we reject the null hypothesis
-print(summary(model)$coefficients[, "Pr(>|t|)"][2])
+# print(summary(model)$coefficients[, "Pr(>|t|)"][2])
 
 # H
 # Construct a 95% confidence interval estimate of the population slope, between the appraised value and the land area.
-n <- length(market_value)
-alpha <- 0.05
-mean <- mean(land_area)
-sd <- sd(land_area)
-rez1 <- mean - qt(1 - alpha / 2, n - 1) * sd / sqrt(n)
-rez2 <- mean + qt(1 - alpha / 2, n - 1) * sd / sqrt(n)
+n <- length(x)
+significance_level <- 0.05
+mean <- mean(y)
+sd <- sd(y)
+# FOR REGRESSION
+# wrong
+# rez1 <- mean - qt(1 - significance_level / 2, n - 2) * sd / sqrt(n)
+# rez2 <- mean + qt(1 - significance_level / 2, n - 2) * sd / sqrt(n)

@@ -83,7 +83,7 @@ data <- data.frame(
 # H1: m1 <> m2 <> m3
 
 # Perform ANOVA
-# perform_anova(data)
+perform_anova(data)
 
 
 #----------------------------------Pr2------------------------------------------
@@ -109,4 +109,4 @@ significance_level <- 0.05
 # H1: m1 <> m2 <> m3
 
 # Perform ANOVA
-# perform_anova(data, significance_level = significance_level)
+perform_anova(data, significance_level = significance_level)

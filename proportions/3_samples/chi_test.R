@@ -35,7 +35,7 @@ perform_chi_square_test <- function(observed, expected = NULL, significance_leve
     # Print the manual calculation results
     cat("Degrees of Freedom:", df, "\n")
     cat("Manual Chi-squared Statistic:", chi_squared_statistic, "\n")
-    cat("Critical Chi-squared at", significance_level * 100, "% significance:", chi_squared_critical, "\n")
+    cat("Critical Chi-squared at", significance_level, "% significance:", chi_squared_critical, "\n")
 
     # Decision based on manual calculation
     if (chi_squared_statistic > chi_squared_critical) {
@@ -45,7 +45,7 @@ perform_chi_square_test <- function(observed, expected = NULL, significance_leve
     }
 
     # Perform the built-in Chi-square test for confirmation
-    chi_test_result <- chisq.test(observed, correct)
+    chi_test_result <- chisq.test(observed, correct = FALSE)
 
     # Print the built-in test results
     cat("\nBuilt-in Chi-squared Test Result:\n")
