@@ -27,4 +27,12 @@ General Hints:
 
 
 1 sample for mean - z-test / t-test if n<30
-2 sample for mean 
+# If p < alpha, reject H0
+
+«For tests for the differences between two groups, first determine whether your data
+are categorical or numerical:                 
+      • If your data are categorical, use the Z test for the difference between two proportions.     
+      • If your data are numerical, determine whether you have independent or related groups:
+            If you have independent groups, use the pooled variance t test for the difference between two means.
+            If you have related groups, use the paired t test.»
+
