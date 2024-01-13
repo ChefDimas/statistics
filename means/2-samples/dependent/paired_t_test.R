@@ -1,8 +1,9 @@
 # You are comparing the means of two related groups.
 # This could mean the same individuals measured at two different times or two groups with matched subjects.
 # The data are paired, meaning each data point in one group is related to one and only one data point in the second group.
+rm(list = ls())
 
-paired_t_test <- function(sample_data1, sample_data2, confidence_level, test_type = "two-tailed") {
+paired_t_test <- function(sample_data1, sample_data2, confidence_level, test_type = "two-tailed", correct = FALSE) {
     cat("--------------------\n")
     # Calculate differences
     differences <- sample_data1 - sample_data2
@@ -51,3 +52,43 @@ paired_t_test <- function(sample_data1, sample_data2, confidence_level, test_typ
     cat("--------------------\n")
     return(list(t_value = t_value, t_critical_lower = t_critical_lower, t_critical_upper = t_critical_upper, p_value = p_value, t_test_result = t_test_result, decision = decision))
 }
+
+#----------------------------------Pr1------------------------------------------
+library(readxl)
+data <- read_excel("./data/Intaglio.xlsx")
+confidence_level <- 0.95
+treated <- data$Treated
+untrated <- data$Untreated
+
+# paired_t_test(untrated, treated, confidence_level = confidence_level, "two-tailed")
+
+#----------------------------------Pr2------------------------------------------
+
+library(readxl)
+data <- read_excel("./data/TargetWalmart.xlsx")
+confidence_interval <- 0.95
+sample_size <- 33
+data1 <- data$"Target"
+data2 <- data$"Walmart"
+
+# paired_t_test(data1, data2, confidence_level = confidence_interval, test_type = "two-tailed")
+
+#----------------------------------Pr3------------------------------------------
+library(readxl)
+data <- read_excel("./data/Myeloma.xlsx")
+confidence_interval <- 0.95
+sample_size <- 7
+data1 <- data$"Before"
+data2 <- data$"After"
+
+# paired_t_test(data1, data2, confidence_level = confidence_interval, test_type = "two-tailed")
+
+#----------------------------------Pr4------------------------------------------
+library(readxl)
+data <- read_excel("./data/Concrete.xlsx")
+confidence_interval <- 0.95
+sample_size <- 40
+data1 <- data$"Two days"
+data2 <- data$"Seven days"
+
+# paired_t_test(data1, data2, confidence_level = confidence_interval, test_type = "two-tailed")

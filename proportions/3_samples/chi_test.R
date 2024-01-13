@@ -185,3 +185,29 @@ significance_level <- 0.05
 
 # Perform Chi-square test
 # perform_chi_square_test(new_data, significance_level = significance_level)
+
+
+#----------------------------------Pr5------------------------------------------
+# Data
+data <- as.table(rbind(c(193, 250), c(459 - 193, 501 - 250)))
+significance_level <- 0.05
+
+# Hypothesis
+# H0: p1 = p2
+# H1: p1 <> p2
+
+# Perform Chi-square test
+# perform_chi_square_test(data, significance_level = significance_level)
+
+
+#----------------------------------Pr6------------------------------------------
+# Data
+data <- as.table(rbind(c(250, 120), c(500 - 250, 200 - 120)))
+significance_level <- 0.05
+
+# Hypothesis
+# H0: p1 = p2
+# H1: p1 <> p2
+
+# Perform Chi-square test
+perform_chi_square_test(data, significance_level = significance_level)

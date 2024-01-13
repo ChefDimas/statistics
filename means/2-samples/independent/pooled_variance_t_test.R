@@ -1,6 +1,8 @@
 # You are comparing the means of two independent groups.
 # You believe or want to assume the two populations have the same variance (homoscedasticity).
 # Your sample sizes are smaller or you don't know the population standard deviations, making the t-test more appropriate than a Z-test.
+rm(list = ls())
+
 pooled_variance_t_test <- function(sample_data1 = NULL, sample_data2 = NULL, confidence_level, test_type = "two-tailed", mean1 = NA, mean2 = NA, sd1 = NA, sd2 = NA, n1 = NA, n2 = NA) {
     cat("--------------------\n")
 
@@ -77,4 +79,20 @@ sample_size <- 20
 # H0: mu1 = mu2
 # H1: mu1 <> mu2
 
-pooled_variance_t_test(mean1 = mean_cheesecake, mean2 = mean_salad, sd1 = sd_cheesecake, sd2 = sd_salad, n1 = sample_size, n2 = sample_size, confidence_level = 0.95, test_type = "two-tailed")
+# pooled_variance_t_test(mean1 = mean_cheesecake, mean2 = mean_salad, sd1 = sd_cheesecake, sd2 = sd_salad, n1 = sample_size, n2 = sample_size, confidence_level = 0.95, test_type = "two-tailed")
+
+
+#----------------------------------Pr2------------------------------------------
+library(readxl)
+data <- read_excel("./data/Phone.xlsx")
+confidence_interval <- 0.95
+sample_size <- 20
+data1 <- data$"Location 1"
+data2 <- data$"Location 2"
+
+# H0: mu1 = mu2
+# H1: mu1 <> mu2
+
+# pooled_variance_t_test(sample_data1 = data1, sample_data2 = data2, confidence_level = confidence_interval, test_type = "two-tailed")
+
+#----------------------------------Pr3------------------------------------------
