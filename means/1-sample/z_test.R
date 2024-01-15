@@ -1,5 +1,5 @@
-install.packages("BSDA")
-library(BSDA)
+# install.packages("BSDA")
+# library(BSDA)
 
 #----------------------------------Functions----------------------------------
 z_test <- function(sample_mean, sample_size, population_mean, population_sd, confidence_level, test_type = "two-tailed") {

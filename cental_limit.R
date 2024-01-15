@@ -48,3 +48,12 @@ alpha <- 0.05
 
 rez1 <- average - qt(1 - alpha / 2, n - 1) * sd / sqrt(n)
 rez2 <- average + qt(1 - alpha / 2, n - 1) * sd / sqrt(n)
+
+#----------------------------------Pr13------------------------------------------
+mean <- 42000
+sd <- 1200
+alpha <- 0.01
+rez1 <- mean - qnorm(1 - alpha / 2) * sd
+rez2 <- mean + qnorm(1 - alpha / 2) * sd
+print(rez1)
+print(rez2)

@@ -169,3 +169,6 @@ row_labels <- c("Company A", "Company B", "Company C")
 
 contingency_table <- create_contingency_table(data, row_labels = row_labels, col_labels = col_labels)
 prob_company_A_given_late <- bayes_rule(contingency_table, evidence = "Late", "Company A")
+
+
+#----------------------------------Pr4------------------------------------------

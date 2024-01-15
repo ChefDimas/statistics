@@ -1,7 +1,7 @@
 # t-tests are used when the population standard deviation is unknown and the sample size
 # is < 30
 #----------------------------------Functions----------------------------------
-t_test <- function(sample_data, population_mean, confidence_level, test_type = "one-tailed-lower", min_sample_size = 30) {
+t_test <- function(sample_data, population_mean, confidence_level, test_type = "one-tailed-lower", min_sample_size = 1) {
     cat("--------------------", "\n")
     sample_size <- length(sample_data)
     sample_mean <- mean(sample_data)
@@ -116,9 +116,8 @@ alpha <- 0.05
 # If T < T_lower => reject H0
 
 # Test
-# t_test(sample_mean = 7.24, sample_size = 22, population_mean = 7, sample_sd = 1.93, confidence_level = 0.95, test_type = "one-tailed-lower")
-
-
+# t_test(sample_data = sample_data, population_mean = 7, confidence_level = 0.95, test_type = "one-tailed-lower")
+# print(t.test(sample_data, mu = 7, conf.level = 0.95, alternative = "less"))
 #----------------------------------Pr2------------------------------------------
 # The mean number of sick days an employee takes per year is believed to be about ten.
 # Members of a personnel department do not believe this figure.
@@ -142,7 +141,7 @@ alpha <- 0.05
 # If T < T_lower or T > T_upper => reject H0
 
 # Test
-# t_test(sample_data = sample_data, population_mean = population_mean, confidence_level = 0.95, test_type = "two-tailed")
+t_test(sample_data = sample_data, population_mean = population_mean, confidence_level = 0.95, test_type = "two-tailed")
 
 
 #----------------------------------Pr3------------------------------------------
@@ -168,7 +167,7 @@ confidence_level <- 0.95
 # H1: mean < 6
 
 # Test
-t_test(sample_data = sample_data, population_mean = claimed_mean, confidence_level = confidence_level, test_type = "one-tailed-lower")
+# t_test(sample_data = sample_data, population_mean = claimed_mean, confidence_level = confidence_level, test_type = "one-tailed-lower")
 
 
 # Test the hypothesis that the population mean sepal width is significantly different than 3 cm

@@ -109,4 +109,47 @@ significance_level <- 0.05
 # H1: m1 <> m2 <> m3
 
 # Perform ANOVA
+# perform_anova(data, significance_level = significance_level)
+
+
+#----------------------------------Pr4------------------------------------------
+# Data
+library(readxl)
+data <- read_excel("./data/FastFoodChain.xlsx")
+data <- stack(data)
+names(data) <- c("score", "group")
+significance_level <- 0.05
+
+# Hypothesis
+# RQ: Is there (at the 0.05 level of significance) a relationship between the fast food chain and the number of customers?
+# H0: m1 = m2 = m3
+# H1: m1 <> m2 <> m3
+
+# Perform ANOVA
+# perform_anova(data, significance_level = significance_level)
+
+
+#----------------------------------Pr5------------------------------------------
+# Data
+library(readxl)
+data <- read_excel("./data/GolfBall.xlsx")
+data <- stack(data)
+names(data) <- c("score", "group")
+significance_level <- 0.05
+
+# Hypothesis
+# RQ: Is there (at the 0.05 level of significance) a relationship between the golf ball and the distance it travels?
+# H0: m1 = m2 = m3
+# H1: m1 <> m2 <> m3
+
+# Perform ANOVA
 perform_anova(data, significance_level = significance_level)
+
+#----------------------------------Pr5------------------------------------------
+
+# If sample_size = 50,5 equal groups,SSW = 1125, the 99% critical f value =3.767, SSA = 400
+# What can you conclude?
+#
+
+F_critical <- qf(1 - 0.99, 4, 45)
+

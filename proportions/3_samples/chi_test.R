@@ -163,7 +163,7 @@ significance_level <- 0.05
 # H1: At least one of the proportions is different
 
 # Chi-square test
-# perform_chi_square_test(data, significance_level = significance_level)
+perform_chi_square_test(data, significance_level = significance_level)
 
 
 
@@ -174,7 +174,6 @@ data <- read_excel("./data/LungCapData.xls")
 
 
 new_data <- table(data$Smoke, data$Gender)
-print(new_data)
 
 significance_level <- 0.05
 
@@ -210,4 +209,20 @@ significance_level <- 0.05
 # H1: p1 <> p2
 
 # Perform Chi-square test
-perform_chi_square_test(data, significance_level = significance_level)
+# perform_chi_square_test(data, significance_level = significance_level)
+
+
+#----------------------------------Pr7------------------------------------------
+# Data
+column_names <- c("Under 35", "35-54", "Over 54")
+row_names <- c("Saturday", "Not Saturday")
+data <- as.table(rbind(c(56, 80, 32), c(200 - 56, 200 - 80, 200 - 32)))
+dimnames(data) <- list(row_names, column_names)
+confidence_level <- 0.95
+print(data)
+# Hypothesis
+# H0: p1 = p2 = p3
+# H1: At least one of the proportions is different
+
+# Perform Chi-square test
+# perform_chi_square_test(data, significance_level = 1 - confidence_level)

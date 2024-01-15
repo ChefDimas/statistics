@@ -53,7 +53,6 @@ rez1 <- pnorm(80, mean = mean, sd = sd, lower.tail = FALSE)
 rez2 <- qnorm(c(0.25, 0.75), mean = mean, sd = sd)
 rez3 <- qnorm(c(0.025, 0.975), mean = mean, sd = sd)
 
-#----------------------------------Pr6------------------------------------------
 # The IQ’s of 600 applicants to a certain college are approximately normally distributed
 # with a mean of 100 and a standard deviation of 15
 # a) If the college requires an IQ of at least 95, how many students will be rejected?
@@ -126,3 +125,12 @@ sd <- 3250
 rez1 <- pnorm(30000, mean = mean, sd = sd, lower.tail = TRUE) - pnorm(20000, mean = mean, sd = sd, lower.tail = TRUE)
 rez2 <- pnorm(20000, mean = mean, sd = sd, lower.tail = TRUE)
 rez3 <- qnorm(0.9, mean = mean, sd = sd)
+
+
+#----------------------------------PrSALES------------------------------------------
+prob_close_deal <- 0.2
+deal_value <- 25000
+target_deals <- 25
+total_deals <- 100
+rez <- pbinom(target_deals, size = total_deals, prob = prob_close_deal, lower.tail = FALSE)
+print(rez)

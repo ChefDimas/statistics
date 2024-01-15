@@ -41,3 +41,19 @@ one_population_z_test <- function(successes, sample_size, claimed_proportion, co
 
     return(list(z_value = z_value, z_critical = c(z_critical_lower, z_critical_upper), p_value = p_value, prop_test_result = prop_test_result, decision = decision))
 }
+
+
+#----------------------------------Pr1------------------------------------------
+# Your statistics instructor claims that 60 percent of the students who take his
+# class go through life feeling more enriched. For some reason that he can't quite
+# figure out, most people don't believe him. You decide to check this out on your own.
+# You randomly survey 64 of his past Statistics students and find that 34 feel
+# more enriched as a result of his class. Now, what do you think?
+
+# Data
+n <- 64
+x <- 34
+sample_proportion <- x / n
+claimed_proportion <- 0.6
+sd_error <- sqrt(claimed_proportion * (1 - claimed_proportion) / n)
+one_population_z_test(successes = 34, sample_size = 64, claimed_proportion = 0.6, confidence_level = 0.95, test_type = "two-tailed")
